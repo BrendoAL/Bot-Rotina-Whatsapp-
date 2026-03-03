@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   mysql:
@@ -13,6 +11,14 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -21,38 +27,148 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   user-service:
     build: ./user-service
     container_name: user-service
     restart: always
     depends_on:
-      - mysql
-      - rabbitmq
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/users_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SERVER_PORT: 8081
     ports:
       - "8081:8081"
+    networks:
+      - app-network
 
   activity-service:
     build: ./activity-service
     container_name: activity-service
     restart: always
     depends_on:
-      - mysql
-      - rabbitmq
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/activity_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      USER_SERVICE_URL: http://user-service:8081
+      SERVER_PORT: 8082
     ports:
       - "8082:8082"
+    networks:
+      - app-network
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx
     restart: always
+    ports:
+      - "8090:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - user-service
       - activity-service
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - app-network
+
+  # ── FASE 2 — descomentar após implementar os serviços ───
+  # whatsapp-bot:
+  #   build: ./whatsapp-bot
+  #   container_name: whatsapp-bot
+  #   restart: always
+  #   depends_on:
+  #     - rabbitmq
+  #     - evolution-api
+  #   environment:
+  #     PORT: 3000
+  #     RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+  #     EVOLUTION_API_URL: http://evolution-api:8080
+  #     EVOLUTION_API_KEY: your-secret-api-key
+  #     EVOLUTION_INSTANCE: prod-bot
+  #     USER_SERVICE_URL: http://user-service:8081
+  #     ACTIVITY_SERVICE_URL: http://activity-service:8082
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - app-network
+
+  # notification-worker:
+  #   build: ./notification-worker
+  #   container_name: notification-worker
+  #   restart: always
+  #   depends_on:
+  #     - rabbitmq
+  #     - evolution-api
+  #   environment:
+  #     RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+  #     EVOLUTION_API_URL: http://evolution-api:8080
+  #     EVOLUTION_API_KEY: your-secret-api-key
+  #     EVOLUTION_INSTANCE: prod-bot
+  #   networks:
+  #     - app-network
+
+  # evolution-api:
+  #   image: atendai/evolution-api:latest
+  #   container_name: evolution-api
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SERVER_URL: http://localhost:8080
+  #     AUTHENTICATION_API_KEY: your-secret-api-key
+  #   volumes:
+  #     - evolution_instances:/evolution/instances
+  #   networks:
+  #     - app-network
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   networks:
+  #     - app-network
+
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: grafana
+  #   ports:
+  #     - "3001:3000"
+  #   environment:
+  #     GF_SECURITY_ADMIN_PASSWORD: admin
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
+  #   networks:
+  #     - app-network
 
 volumes:
   mysql_data:
+  # evolution_instances:
+  # grafana_data:
+
+networks:
+  app-network:
+    driver: bridge
