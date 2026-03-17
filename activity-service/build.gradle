@@ -36,10 +36,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 bootJar {
-    archiveFileName = 'activity-service.jar'
+    archiveFileName = 'user-service.jar'
 }
 
 tasks.named('test') {
