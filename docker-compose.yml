@@ -11,7 +11,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init-db:/docker-entrypoint-initdb.d
+      - ./init-db:/docker-entrypoint-initdb.d:z
     networks:
       - app-network
     healthcheck:
@@ -78,6 +78,7 @@ services:
     networks:
       - app-network
 
+  # Porta alterada para 8090 — pihole já usa a 80
   nginx:
     image: nginx:alpine
     container_name: nginx
@@ -92,82 +93,8 @@ services:
     networks:
       - app-network
 
-  # ── FASE 2 — descomentar após implementar os serviços ───
-  # whatsapp-bot:
-  #   build: ./whatsapp-bot
-  #   container_name: whatsapp-bot
-  #   restart: always
-  #   depends_on:
-  #     - rabbitmq
-  #     - evolution-api
-  #   environment:
-  #     PORT: 3000
-  #     RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
-  #     EVOLUTION_API_URL: http://evolution-api:8080
-  #     EVOLUTION_API_KEY: your-secret-api-key
-  #     EVOLUTION_INSTANCE: prod-bot
-  #     USER_SERVICE_URL: http://user-service:8081
-  #     ACTIVITY_SERVICE_URL: http://activity-service:8082
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - app-network
-
-  # notification-worker:
-  #   build: ./notification-worker
-  #   container_name: notification-worker
-  #   restart: always
-  #   depends_on:
-  #     - rabbitmq
-  #     - evolution-api
-  #   environment:
-  #     RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
-  #     EVOLUTION_API_URL: http://evolution-api:8080
-  #     EVOLUTION_API_KEY: your-secret-api-key
-  #     EVOLUTION_INSTANCE: prod-bot
-  #   networks:
-  #     - app-network
-
-  # evolution-api:
-  #   image: atendai/evolution-api:latest
-  #   container_name: evolution-api
-  #   restart: always
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     SERVER_URL: http://localhost:8080
-  #     AUTHENTICATION_API_KEY: your-secret-api-key
-  #   volumes:
-  #     - evolution_instances:/evolution/instances
-  #   networks:
-  #     - app-network
-
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-  #   networks:
-  #     - app-network
-
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   container_name: grafana
-  #   ports:
-  #     - "3001:3000"
-  #   environment:
-  #     GF_SECURITY_ADMIN_PASSWORD: admin
-  #   volumes:
-  #     - grafana_data:/var/lib/grafana
-  #   networks:
-  #     - app-network
-
 volumes:
   mysql_data:
-  # evolution_instances:
-  # grafana_data:
 
 networks:
   app-network:
