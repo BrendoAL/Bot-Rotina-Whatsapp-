@@ -1,11 +1,15 @@
 package com.lambda.activity_service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lambda.activity_service.activitymodule.GoalController;
-import com.lambda.activity_service.activitymodule.GoalService;
-import com.lambda.activity_service.dto.*;
-import com.lambda.activity_service.exception.*;
-import org.junit.jupiter.api.*;
+import com.lambda.activity_service.exception.GoalNotFoundException;
+import com.lambda.activity_service.exception.UserNotFoundException;
+import com.lambda.activity_service.goal.GoalController;
+import com.lambda.activity_service.goal.GoalRequestDTO;
+import com.lambda.activity_service.goal.GoalResponseDTO;
+import com.lambda.activity_service.goal.GoalService;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -17,7 +21,8 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GoalController.class)
 @DisplayName("GoalController")
@@ -25,7 +30,8 @@ class GoalControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
-    @MockitoBean GoalService goalService;
+    @MockitoBean
+    GoalService goalService;
 
     // ─────────────────────────────────────────────────────────────
     // POST /api/goals

@@ -1,4 +1,4 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.activity;
 
 import com.lambda.activity_service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.activity;
 
 // Evento publicado quando atividade é criada com sucesso
 // Consumido pelo notification-worker para responder no WhatsApp

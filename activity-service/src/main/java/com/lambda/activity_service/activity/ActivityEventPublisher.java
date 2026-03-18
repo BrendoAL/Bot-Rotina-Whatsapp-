@@ -1,6 +1,5 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.activity;
 
-import com.lambda.activity_service.dto.ActivityRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

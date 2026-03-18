@@ -1,11 +1,17 @@
-package com.lambda.activity_service.service;
+package com.lambda.activity_service.consumer;
 
-import com.lambda.activity_service.activitymodule.*;
-import com.lambda.activity_service.dto.ActivityRequestDTO;
+import com.lambda.activity_service.activity.ActivityConsumer;
+import com.lambda.activity_service.activity.ActivityEventPublisher;
+import com.lambda.activity_service.activity.ActivityRequestDTO;
+import com.lambda.activity_service.activity.ActivityService;
 import com.lambda.activity_service.exception.UserNotFoundException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -18,9 +24,12 @@ import static org.mockito.Mockito.*;
 @DisplayName("ActivityConsumer")
 class ActivityConsumerTest {
 
-    @Mock ActivityService activityService;
-    @Mock ActivityEventPublisher eventPublisher;
-    @InjectMocks ActivityConsumer activityConsumer;
+    @Mock
+    ActivityService activityService;
+    @Mock
+    ActivityEventPublisher eventPublisher;
+    @InjectMocks
+    ActivityConsumer activityConsumer;
 
     private ActivityRequestDTO validRequest;
 

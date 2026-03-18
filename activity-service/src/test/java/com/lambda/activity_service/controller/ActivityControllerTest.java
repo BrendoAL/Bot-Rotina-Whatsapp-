@@ -1,11 +1,11 @@
 package com.lambda.activity_service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lambda.activity_service.activitymodule.ActivityController;
-import com.lambda.activity_service.activitymodule.ActivityService;
-import com.lambda.activity_service.dto.*;
-import com.lambda.activity_service.exception.*;
-import org.junit.jupiter.api.*;
+import com.lambda.activity_service.activity.*;
+import com.lambda.activity_service.exception.UserNotFoundException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -15,10 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ActivityController.class)
 @DisplayName("ActivityController")
@@ -26,7 +28,8 @@ class ActivityControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
-    @MockitoBean ActivityService activityService;
+    @MockitoBean
+    ActivityService activityService;
 
     // ─────────────────────────────────────────────────────────────
     // POST /api/activities

@@ -1,4 +1,4 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.goal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

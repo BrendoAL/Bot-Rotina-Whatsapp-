@@ -1,6 +1,5 @@
 package com.lambda.activity_service.activity;
 
-import com.lambda.activity_service.dto.ActivityRequestDTO;
 import com.lambda.activity_service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

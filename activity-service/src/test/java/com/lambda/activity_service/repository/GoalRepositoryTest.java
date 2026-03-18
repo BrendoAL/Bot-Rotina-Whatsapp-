@@ -1,7 +1,11 @@
 package com.lambda.activity_service.repository;
 
-import com.lambda.activity_service.activitymodule.*;
-import org.junit.jupiter.api.*;
+import com.lambda.activity_service.goal.Goal;
+import com.lambda.activity_service.goal.GoalRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("GoalRepository")
 class GoalRepositoryTest {
 
-    @Autowired GoalRepository goalRepository;
+    @Autowired
+    GoalRepository goalRepository;
 
     @BeforeEach
     void setUp() {

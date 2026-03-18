@@ -1,15 +1,21 @@
 package com.lambda.activity_service.service;
 
-import com.lambda.activity_service.activitymodule.*;
-import com.lambda.activity_service.dto.*;
-import org.junit.jupiter.api.*;
+import com.lambda.activity_service.activity.WhatsappMessage;
+import com.lambda.activity_service.activity.WhatsappMessageRepository;
+import com.lambda.activity_service.activity.WhatsappMessageService;
+import com.lambda.activity_service.whatsappmessage.WhatsappMessageRequestDTO;
+import com.lambda.activity_service.whatsappmessage.WhatsappMessageResponseDTO;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -17,8 +23,10 @@ import static org.mockito.Mockito.*;
 @DisplayName("WhatsappMessageService")
 class WhatsappMessageServiceTest {
 
-    @Mock WhatsappMessageRepository whatsappMessageRepository;
-    @InjectMocks WhatsappMessageService whatsappMessageService;
+    @Mock
+    WhatsappMessageRepository whatsappMessageRepository;
+    @InjectMocks
+    WhatsappMessageService whatsappMessageService;
 
     // ─────────────────────────────────────────────────────────────
     // save()

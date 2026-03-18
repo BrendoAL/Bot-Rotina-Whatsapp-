@@ -1,24 +1,30 @@
-package com.lambda.activity_service.service;
+package com.lambda.activity_service.consumer;
 
-import com.lambda.activity_service.activitymodule.*;
-import com.lambda.activity_service.dto.ActivityRequestDTO;
-import org.junit.jupiter.api.*;
+import com.lambda.activity_service.activity.ActivityCreatedEvent;
+import com.lambda.activity_service.activity.ActivityErrorEvent;
+import com.lambda.activity_service.activity.ActivityEventPublisher;
+import com.lambda.activity_service.activity.ActivityRequestDTO;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ActivityEventPublisher")
 class ActivityEventPublisherTest {
 
     @Mock RabbitTemplate rabbitTemplate;
-    @InjectMocks ActivityEventPublisher eventPublisher;
+    @InjectMocks
+    ActivityEventPublisher eventPublisher;
 
     // ─────────────────────────────────────────────────────────────
     // publishCreated()

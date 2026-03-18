@@ -1,4 +1,4 @@
-package com.lambda.activity_service.dto;
+package com.lambda.activity_service.activity;
 
 public record ActivityStatsDTO(
         int todayCount,

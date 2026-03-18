@@ -1,4 +1,4 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

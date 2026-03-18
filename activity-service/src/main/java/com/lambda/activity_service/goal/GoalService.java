@@ -1,6 +1,6 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.goal;
 
-import com.lambda.activity_service.dto.*;
+import com.lambda.activity_service.activity.UserServiceClient;
 import com.lambda.activity_service.exception.GoalNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

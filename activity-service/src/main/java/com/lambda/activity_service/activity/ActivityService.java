@@ -1,6 +1,5 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.activity;
 
-import com.lambda.activity_service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class ActivityService {
     public Long create(ActivityRequestDTO dto) {
         userServiceClient.validateUser(dto.userId());
 
-        Activity activity = Activity.builder()
+        com.lambda.activity_service.activitymodule.Activity activity = com.lambda.activity_service.activitymodule.Activity.builder()
                 .userId(dto.userId())
                 .title(dto.title())
                 .description(dto.description())
@@ -49,7 +48,7 @@ public class ActivityService {
         return new ActivityStatsDTO(todayCount, todayMinutes, weekCount, weekMinutes);
     }
 
-    private ActivityResponseDTO toDTO(Activity a) {
+    private ActivityResponseDTO toDTO(com.lambda.activity_service.activitymodule.Activity a) {
         return new ActivityResponseDTO(
                 a.getId(), a.getUserId(), a.getTitle(), a.getDescription(),
                 a.getCategory(), a.getDurationMinutes(), a.getDate(), a.getSource()

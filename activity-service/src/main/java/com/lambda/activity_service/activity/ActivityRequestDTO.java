@@ -1,4 +1,4 @@
-package com.lambda.activity_service.dto;
+package com.lambda.activity_service.activity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.lambda.activity_service.dto;
+package com.lambda.activity_service.activity;
 
 import java.time.LocalDate;
 

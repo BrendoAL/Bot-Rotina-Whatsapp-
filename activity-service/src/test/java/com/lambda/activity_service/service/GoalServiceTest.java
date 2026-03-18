@@ -1,17 +1,22 @@
 package com.lambda.activity_service.service;
 
-import com.lambda.activity_service.activitymodule.*;
-import com.lambda.activity_service.dto.*;
-import com.lambda.activity_service.exception.*;
-import org.junit.jupiter.api.*;
+import com.lambda.activity_service.activity.UserServiceClient;
+import com.lambda.activity_service.exception.GoalNotFoundException;
+import com.lambda.activity_service.exception.UserNotFoundException;
+import com.lambda.activity_service.goal.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -19,9 +24,12 @@ import static org.mockito.Mockito.*;
 @DisplayName("GoalService")
 class GoalServiceTest {
 
-    @Mock GoalRepository goalRepository;
-    @Mock UserServiceClient userServiceClient;
-    @InjectMocks GoalService goalService;
+    @Mock
+    GoalRepository goalRepository;
+    @Mock
+    UserServiceClient userServiceClient;
+    @InjectMocks
+    GoalService goalService;
 
     // ─────────────────────────────────────────────────────────────
     // create()

@@ -1,7 +1,6 @@
-package com.lambda.activity_service.activitymodule;
+package com.lambda.activity_service.activity;
 
-import com.lambda.activity_service.dto.*;
-import com.lambda.activity_service.exception.*;
+import com.lambda.activity_service.exception.UserNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
