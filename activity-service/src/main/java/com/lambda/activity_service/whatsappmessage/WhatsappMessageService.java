@@ -1,4 +1,4 @@
-package com.lambda.activity_service.activity;
+package com.lambda.activity_service.whatsappmessage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

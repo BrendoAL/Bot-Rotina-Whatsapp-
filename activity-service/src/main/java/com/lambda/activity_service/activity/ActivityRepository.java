@@ -7,9 +7,9 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ActivityRepository extends JpaRepository<com.lambda.activity_service.activitymodule.Activity, Long> {
+public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
-    List<com.lambda.activity_service.activitymodule.Activity> findByUserId(Long userId);
+    List<Activity> findByUserId(Long userId);
 
     @Query("SELECT COUNT(a) FROM Activity a WHERE a.userId = :userId AND a.date BETWEEN :start AND :end")
     int countByUserIdAndDateBetween(@Param("userId") Long userId,
