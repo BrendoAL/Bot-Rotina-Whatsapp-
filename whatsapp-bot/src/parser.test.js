@@ -1,4 +1,4 @@
-const { parseMessage } = require('./Parser');
+const { parseMessage } = require('./parser');
 
 describe('parseMessage()', () => {
 
