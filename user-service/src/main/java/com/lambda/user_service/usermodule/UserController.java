@@ -38,6 +38,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findByPhone(phone));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponseDTO> findByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.findByEmail(email));
+    }
+
     @PutMapping("/{id}/phone")
     public ResponseEntity<Void> updatePhone(@PathVariable Long id,
                                             @Valid @RequestBody UpdatePhoneRequestDTO dto) {

@@ -52,6 +52,34 @@ describe('parseMessage()', () => {
         })
     })
 
+    describe('metas', () => {
+        test('deve reconhecer "meta: estudar 1h por dia" como GOAL', () => {
+            expect(parseMessage('meta: estudar 1h por dia')).toMatchObject({
+                type: 'GOAL',
+                category: 'ESTUDO',
+                durationMinutes: 60,
+                period: 'DAILY',
+            })
+        })
+
+        test('deve reconhecer "estudar 1h por dia" como GOAL', () => {
+            expect(parseMessage('estudar 1h por dia')).toMatchObject({
+                type: 'GOAL',
+                category: 'ESTUDO',
+                durationMinutes: 60,
+                period: 'DAILY',
+            })
+        })
+
+        test('nao deve tratar atividade com duracao como meta sem periodo', () => {
+            expect(parseMessage('estudei 1h java')).toMatchObject({
+                type: 'ACTIVITY',
+                category: 'ESTUDO',
+                durationMinutes: 60,
+            })
+        })
+    })
+
     describe('mensagens desconhecidas', () => {
         test('deve retornar UNKNOWN para mensagem sem contexto', () => {
             expect(parseMessage('olá tudo bem').type).toBe('UNKNOWN')

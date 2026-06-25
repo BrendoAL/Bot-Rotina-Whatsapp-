@@ -56,6 +56,12 @@ public class UserService {
         return toDTO(user);
     }
 
+    public UserResponseDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+        return toDTO(user);
+    }
+
     public void updatePhone(Long id, String phone) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));

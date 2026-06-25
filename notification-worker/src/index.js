@@ -2,19 +2,13 @@ const amqp = require('amqplib');
 const axios = require('axios');
 
 const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://guest:guest@localhost:5672';
-const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL;
-const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY;
-const EVOLUTION_INSTANCE = process.env.EVOLUTION_INSTANCE;
+const WHATSAPP_BOT_URL = process.env.WHATSAPP_BOT_URL || 'http://localhost:3000';
 
 async function sendWhatsApp(phone, text) {
   try {
-    await axios.post(
-      `${EVOLUTION_API_URL}/message/sendText/${EVOLUTION_INSTANCE}`,
-      { number: phone, text },
-      { headers: { apikey: EVOLUTION_API_KEY } }
-    );
+    await axios.post(`${WHATSAPP_BOT_URL}/send`, { phone, text });
   } catch (err) {
-    console.error('[WORKER] Falha ao enviar mensagem:', err.message);
+    console.error('[WORKER] Falha ao enviar mensagem:', err.response?.data || err.message);
   }
 }
 
@@ -37,7 +31,7 @@ async function start() {
 
     if (event.phone) {
       const duration = event.durationMinutes
-        ? `${event.durationMinutes}min`
+        ? formatDuration(event.durationMinutes)
         : '';
       const category = formatCategory(event.category);
       const title = event.title ? ` — ${event.title}` : '';
@@ -58,10 +52,13 @@ async function start() {
     const event = JSON.parse(msg.content.toString());
     console.log('[WORKER] activity.error:', event);
 
-    if (event.phone) {
+    const originalRequest = event.originalRequest || {};
+    const phone = event.phone || originalRequest.description;
+
+    if (phone) {
       await sendWhatsApp(
-        event.phone,
-        `❌ Não consegui registrar: ${event.error || 'erro desconhecido'}\nMensagem original: "${event.originalMessage}"`
+        phone,
+        `❌ Não consegui registrar: ${event.error || 'erro desconhecido'}\nMensagem original: "${originalRequest.title || originalRequest.rawMessage || ''}"`
       );
     }
 
@@ -78,6 +75,16 @@ function formatCategory(cat) {
     OUTRO: 'Atividade',
   };
   return map[cat] || cat;
+}
+
+function formatDuration(minutes) {
+  const total = Number(minutes || 0);
+  const hours = Math.floor(total / 60);
+  const mins = total % 60;
+
+  if (hours && mins) return `${hours}h${String(mins).padStart(2, '0')}`;
+  if (hours) return `${hours}h`;
+  return `${mins}min`;
 }
 
 start().catch(err => {

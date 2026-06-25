@@ -1,6 +1,6 @@
 const CATEGORIES = {
     ESTUDO: ['estud', 'aprend', 'cod', 'program', 'aula', 'curso', 'revis'],
-    TREINO: ['trein', 'malh', 'exercit', 'acad', 'corr', 'pedal', 'natac'],
+    TREINO: ['trein', 'treino', 'malh', 'exercit', 'acad', 'corr', 'pedal', 'natac'],
     LEITURA: ['li ', 'lendo', 'leitura', 'livro', 'artigo'],
     ALIMENTACAO: ['comi', 'almoc', 'jantei', 'café', 'refeic'],
     OUTRO: [],
@@ -46,11 +46,46 @@ function detectCommand(text) {
     return null
 }
 
+function detectPeriod(text) {
+    const lower = text.toLowerCase()
+    if (/\bpor\s+dia\b|\bdi[aá]ri[ao]\b|\btodo\s+dia\b/.test(lower)) return 'DAILY'
+    if (/\bpor\s+semana\b|\bsemanal\b|\btoda\s+semana\b/.test(lower)) return 'WEEKLY'
+    if (/\bpor\s+m[eê]s\b|\bmensal\b|\btodo\s+m[eê]s\b/.test(lower)) return 'MONTHLY'
+    return null
+}
+
+function detectGoal(text) {
+    const lower = text.toLowerCase().trim()
+    const hasGoalPrefix = /^(meta|objetivo)\s*:?\s+/.test(lower)
+    const period = detectPeriod(lower)
+    const durationMinutes = extractDuration(lower)
+
+    if (!durationMinutes || (!hasGoalPrefix && !period)) return null
+
+    return {
+        category: detectCategory(lower),
+        durationMinutes,
+        period: period || 'DAILY',
+    }
+}
+
 export function parseMessage(text) {
     if (!text || typeof text !== 'string') return { type: 'UNKNOWN', raw: text }
     const trimmed = text.trim()
     const command = detectCommand(trimmed)
     if (command) return { type: 'COMMAND', command, raw: trimmed }
+
+    const goal = detectGoal(trimmed)
+    if (goal) {
+        return {
+            type: 'GOAL',
+            category: goal.category,
+            durationMinutes: goal.durationMinutes,
+            period: goal.period,
+            raw: trimmed,
+        }
+    }
+
     const category = detectCategory(trimmed)
     const durationMinutes = extractDuration(trimmed)
     const title = extractTitle(trimmed)

@@ -21,7 +21,6 @@
     "nodemon": "^3.0.0"
   },
   "jest": {
-    "extensionsToTreatAsEsm": [".js"],
     "transform": {}
   }
 }

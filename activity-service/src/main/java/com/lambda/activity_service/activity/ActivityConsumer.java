@@ -25,7 +25,7 @@ public class ActivityConsumer {
             // usar uma convenção: source=WHATSAPP significa que veio do bot
             String phone = "WHATSAPP".equals(request.source()) ? extractPhone(request) : null;
 
-            eventPublisher.publishCreated(request.userId(), activityId, phone);
+            eventPublisher.publishCreated(request, activityId, phone);
 
         } catch (UserNotFoundException e) {
             log.warn("[CONSUMER] userId não encontrado: {}", e.getMessage());

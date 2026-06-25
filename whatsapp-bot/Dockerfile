@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Dependências nativas que o Baileys precisa
 RUN apk add --no-cache python3 make g++ git
@@ -7,7 +7,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --production
+RUN npm ci --omit=dev
 
 COPY src/ ./src/
 

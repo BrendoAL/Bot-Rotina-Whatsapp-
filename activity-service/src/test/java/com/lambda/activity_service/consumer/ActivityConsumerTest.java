@@ -38,7 +38,7 @@ class ActivityConsumerTest {
             activityConsumer.consume(validRequest);
 
             verify(activityService).create(validRequest);
-            verify(eventPublisher).publishCreated(eq(1L), eq(10L), any());
+            verify(eventPublisher).publishCreated(eq(validRequest), eq(10L), any());
         }
 
         @Test @DisplayName("deve publicar activity.error quando userId não encontrado")

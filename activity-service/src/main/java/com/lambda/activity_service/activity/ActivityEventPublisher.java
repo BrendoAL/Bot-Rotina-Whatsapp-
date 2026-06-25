@@ -12,11 +12,17 @@ public class ActivityEventPublisher {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void publishCreated(Long userId, Long activityId, String phone) {
+    public void publishCreated(ActivityRequestDTO request, Long activityId, String phone) {
         // phone é null quando a origem é API — notification-worker ignora nesse caso
-        ActivityCreatedEvent event = new ActivityCreatedEvent(userId, activityId, phone, null, 0);
+        ActivityCreatedEvent event = new ActivityCreatedEvent(
+                request.userId(),
+                activityId,
+                phone,
+                request.category(),
+                request.durationMinutes()
+        );
         rabbitTemplate.convertAndSend("activity.created", event);
-        log.info("[PUBLISHER] activity.created — userId={} activityId={}", userId, activityId);
+        log.info("[PUBLISHER] activity.created — userId={} activityId={}", request.userId(), activityId);
     }
 
     public void publishError(ActivityRequestDTO originalRequest, String error) {

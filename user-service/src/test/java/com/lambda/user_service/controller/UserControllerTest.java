@@ -176,6 +176,32 @@ class UserControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("GET /api/users/email/{email}")
+    class GetByEmail {
+
+        @Test
+        @DisplayName("deve retornar 200 com usuário quando email encontrado")
+        void shouldReturn200WhenEmailFound() throws Exception {
+            UserResponseDTO response = new UserResponseDTO(1L, "Brendo", "brendo@email.com", null, true);
+            when(userService.findByEmail("brendo@email.com")).thenReturn(response);
+
+            mockMvc.perform(get("/api/users/email/brendo@email.com"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(1L))
+                    .andExpect(jsonPath("$.email").value("brendo@email.com"));
+        }
+
+        @Test
+        @DisplayName("deve retornar 404 quando email não existe")
+        void shouldReturn404WhenEmailNotFound() throws Exception {
+            when(userService.findByEmail("naoexiste@email.com")).thenThrow(new UserNotFoundException("naoexiste@email.com"));
+
+            mockMvc.perform(get("/api/users/email/naoexiste@email.com"))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
     // ─────────────────────────────────────────────────────────────
     // GET /api/users/phone/{phone}
     // ─────────────────────────────────────────────────────────────

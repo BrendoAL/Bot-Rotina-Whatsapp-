@@ -24,7 +24,10 @@ class ActivityEventPublisherTest {
 
         @Test @DisplayName("deve publicar na fila activity.created com os dados corretos")
         void shouldPublishToCreatedQueue() {
-            eventPublisher.publishCreated(1L, 10L, "5511999999999");
+            ActivityRequestDTO request = new ActivityRequestDTO(
+                    1L, "Estudar Java", "5511999999999", "ESTUDO", 90, LocalDate.now(), "WHATSAPP");
+
+            eventPublisher.publishCreated(request, 10L, "5511999999999");
 
             verify(rabbitTemplate).convertAndSend(
                     eq("activity.created"),
@@ -32,14 +35,19 @@ class ActivityEventPublisherTest {
                         ActivityCreatedEvent event = (ActivityCreatedEvent) payload;
                         return event.userId().equals(1L)
                                 && event.activityId().equals(10L)
-                                && event.phone().equals("5511999999999");
+                                && event.phone().equals("5511999999999")
+                                && event.category().equals("ESTUDO")
+                                && event.durationMinutes() == 90;
                     })
             );
         }
 
         @Test @DisplayName("deve publicar mesmo quando phone é nulo")
         void shouldPublishWhenPhoneIsNull() {
-            eventPublisher.publishCreated(1L, 10L, null);
+            ActivityRequestDTO request = new ActivityRequestDTO(
+                    1L, "Estudar Java", null, "ESTUDO", 90, LocalDate.now(), "API");
+
+            eventPublisher.publishCreated(request, 10L, null);
 
             verify(rabbitTemplate).convertAndSend(eq("activity.created"), (Object) any());
         }

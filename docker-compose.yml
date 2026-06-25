@@ -91,6 +91,8 @@ services:
       ACTIVITY_SERVICE_URL: http://activity-service:8082
     ports:
       - "3000:3000"
+    volumes:
+      - ./whatsapp-bot/sessions:/app/sessions:z
     networks:
       - app-network
 
